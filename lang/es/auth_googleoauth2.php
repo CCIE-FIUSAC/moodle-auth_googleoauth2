@@ -60,6 +60,17 @@ $string['auth_linkedinclientid'] = 'Tus claves secretas/API pueden ser generados
 $string['auth_linkedinclientid_key'] = 'Clave API de Linkedin';
 $string['auth_linkedinclientsecret'] = 'Ver arriba.';
 $string['auth_linkedinclientsecret_key'] = 'Clave secreto de Linkedin';
+$string['auth_openamserverurl'] = 'URL Servidor. ej: http://ssodes.site.com:8080/OpenAM-12.0.0';
+$string['auth_openamserverurl_key'] = 'URL Servidor OpenAM';
+$string['auth_openamclientid'] = 'Llave de Usuario';
+$string['auth_openamclientid_key'] = 'Llave Usuario OpenAM';
+$string['auth_openamclientsecret'] = 'Ver arriba.';
+$string['auth_openamclientsecret_key'] = 'Secreto App OpenAM';
+$string['auth_openamscope'] = 'Valor Scope. ej: givenname%20inetuserstatus%20sn%20mail%20cn';
+$string['auth_openamscope_key'] = 'OpenAM Scope';
+$string['auth_openamresponsetype'] = 'Valor Response Type. ej. code';
+$string['auth_openamresponsetype_key'] = 'Response Type';
+
 $string['auth_messengerclientid'] = 'Tu ID cliente/secreto puede ser generado en tu <a href="https://account.live.com/developers/applications">página de Windows Live</a>:
 <br/>Redirect domain: {$a->domain}';
 $string['auth_messengerclientid_key'] = 'ID Cliente Messenger';

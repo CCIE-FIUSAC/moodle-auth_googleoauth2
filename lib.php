@@ -138,6 +138,17 @@ function auth_googleoauth2_render_buttons() {
         </div>
     </div>';
 
+    $a->providername = 'OpenAM';
+    $providerisenabled = get_config('auth/googleoauth2', 'openamclientid');
+    $providerscount = $providerisenabled?$providerscount+1:$providerscount;
+	$displayprovider = ((empty($authprovider) || $authprovider == 'openam' || $allauthproviders) && $providerisenabled);
+	$providerdisplaystyle = $displayprovider?'display:inline-block;padding:10px;':'display:none;';
+	$html .= '<div class="singinprovider" style="'. $providerdisplaystyle .'">
+            <a class="zocial facebook" href="' . get_config('auth/googleoauth2','openamserverurl') . '/oauth2/authorize?client_id='. get_config('auth/googleoauth2', 'openamclientid') .'&redirect_uri='. $CFG->wwwroot .'/auth/googleoauth2/openam_redirect.php&state='.auth_googleoauth2_get_state_token().'&scope=' . get_config('auth/googleoauth2','openamscope') . '&response_type=' . get_config('auth/googleoauth2','openamresponsetype') . '">
+                '.get_string('auth_sign-in_with','auth_googleoauth2', $a).'
+            </a>
+        </div>';
+
 	if (!$allauthproviders and !empty($authprovider) and $providerscount>1) {
 		$html .= '<br /><br /> 
            <div class="moreproviderlink">

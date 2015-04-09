@@ -1,4 +1,4 @@
-This plugin adds the "Sign-in with Google / Facebook / Github / Linkedin / Windows Live" buttons on the login page. The first time the user login with a social account, a new Moodle account is created. 
+This plugin adds the "Sign-in with OpenAM / Google / Facebook / Github / Linkedin / Windows Live" buttons on the login page. The first time the user login with a social account, a new Moodle account is created. 
 
 ### Installation:
 

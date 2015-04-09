@@ -85,6 +85,29 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
         return false;
     }
 
+    function curl_post($requestaccesstokenurl, $params){
+        $ch = curl_init($requestaccesstokenurl);
+        $data = '';
+        foreach ($params as $key => $value) {
+            $data .= $key . '=' . $value . '&';
+        }
+        $headers = array(
+            "Accept: */*",
+            "Accept-Encoding: gzip,deflate",
+            "Connection: keep-alive",
+            "User-Agent: MoodleBot/1.0",
+            "Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7",
+            "Connection: keep-alive",
+            "Content-length: ".strlen($data),
+            "Content-Type: application/x-www-form-urlencoded;charset=UTF-8"
+        );
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        return curl_exec($ch);
+    }
     /**
      * Authentication hook - is called every time user hit the login page
      * The code is run only if the param code is mentionned.
@@ -140,6 +163,14 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
                     $params['client_secret'] = get_config('auth/googleoauth2', 'linkedinclientsecret');
                     $requestaccesstokenurl = 'https://www.linkedin.com/uas/oauth2/accessToken';
                     break;
+                case 'openam':
+                    $params['grant_type'] = 'authorization_code';
+                    $params['code'] = $authorizationcode;
+                    $params['redirect_uri'] = $CFG->wwwroot . '/auth/googleoauth2/openam_redirect.php';
+                    $params['client_id'] = get_config('auth/googleoauth2', 'openamclientid');
+                    $params['client_secret'] = get_config('auth/googleoauth2', 'openamclientsecret');
+                    $requestaccesstokenurl = get_config('auth/googleoauth2', 'openamserverurl') . '/oauth2/access_token';
+                    break;
                 default:
                     throw new moodle_exception('unknown_oauth2_provider');
                     break;
@@ -153,7 +184,12 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
             } else if ($authprovider == 'linkedin') {
                 $postreturnvalues = $curl->get($requestaccesstokenurl . '?client_id=' . urlencode($params['client_id']) . '&redirect_uri=' . urlencode($params['redirect_uri'] ). '&client_secret=' . urlencode($params['client_secret']) . '&code=' .urlencode( $params['code']) . '&grant_type=authorization_code');
             } else {
-                $postreturnvalues = $curl->post($requestaccesstokenurl, $params);
+                $postreturnvalues = $this->curl_post($requestaccesstokenurl, $params);
+//                $file = fopen("/var/www/lms/auth/googleoauth2/debug.log", "w");
+//                        fwrite($file, '$requestaccesstokenurl: ' . $requestaccesstokenurl. PHP_EOL);
+//                        fwrite($file, '$params: ' . print_r($params, true). PHP_EOL);
+//                        fwrite($file, '$postreturnvalues: ' . $postreturnvalues. PHP_EOL);
+//                        fclose($file);
             }
 
             switch ($authprovider) {
@@ -171,6 +207,9 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
                     $accesstoken = $returnvalues['access_token'];
                     break;
                 case 'messenger':
+                    $accesstoken = json_decode($postreturnvalues)->access_token;
+                    break;
+                case 'openam':
                     $accesstoken = json_decode($postreturnvalues)->access_token;
                     break;
                 default:
@@ -249,6 +288,20 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
                         $verified = 1;
                         break;
 
+                    case 'openam':
+                        $params = array();
+                        $params['access_token'] = $accesstoken;
+                        $postreturnvalues = $curl->get(get_config('auth/googleoauth2', 'openamserverurl') . '/oauth2/tokeninfo', $params);
+                        $openamuser = json_decode($postreturnvalues);
+                        $useremail = $openamuser->mail;
+                        $verified = $openamuser->inetuserstatus;
+                        // $file = fopen("/var/www/lms/auth/googleoauth2/debug.log", "w");
+                        // fwrite($file, 'url: ' . get_config('auth/googleoauth2', 'openamserverurl') . '/oauth2/tokeninfo' . PHP_EOL);
+                        // fwrite($file, '$params: ' . print_r($params, true). PHP_EOL);
+                        // fwrite($file, '$postreturnvalues: ' . $postreturnvalues . PHP_EOL);
+                        // fclose($file);
+                        break;
+                    
                     default:
                         break;
                 }
@@ -341,6 +394,11 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
                             if (!empty($linkedinuser->location->name)) {
                                 $newuser->city = $linkedinuser->location->name;
                             }
+                            break;
+                            
+                        case 'openam':
+                            $newuser->firstname =  $openamuser->givenname;
+                            $newuser->lastname =  $openamuser->sn;
                             break;
 
                         default:
@@ -499,6 +557,18 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
         if (!isset($config->oauth2displaybuttons)) {
             $config->oauth2displaybuttons = 1;
         }
+        if (!isset ($config->openamserverurl)) {
+            $config->openamserverurl = '';
+        }
+        if (!isset ($config->openamclientid)) {
+            $config->openamclientid = '';
+        }
+        if (!isset ($config->openamclientsecret)) {
+            $config->openamclientsecret = '';
+        }
+        if (!isset ($config->openamresponsetype)) {
+            $config->openamresponsetype = '';
+        }
 
         echo '<table cellspacing="0" cellpadding="5" border="0">
             <tr>
@@ -508,13 +578,134 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
 
 
         print_string('auth_googlesettings', 'auth_googleoauth2');
-
-        // Google client id
+        
+        // OpenAM server url
 
         echo '</h2>
                </td>
             </tr>
             <tr>
+                <td align="right"><label for="openamserverurl">';
+
+        print_string('auth_openamserverurl_key', 'auth_googleoauth2');
+
+        echo '</label></td><td>';
+
+
+        echo html_writer::empty_tag('input',
+                array('type' => 'text', 'id' => 'openamserverurl', 'name' => 'openamserverurl',
+                    'class' => 'openamserverurl', 'value' => $config->openamserverurl));
+
+        if (isset($err["openamserverurl"])) {
+            echo $OUTPUT->error_text($err["openamserverurl"]);
+        }
+
+        echo '</td><td>';
+        print_string('auth_openamserverurl', 'auth_googleoauth2');
+
+        echo '</td></tr>';
+        
+        // OpenAM client id
+
+        echo '<tr>
+                <td align="right"><label for="openamclientid">';
+
+        print_string('auth_openamclientid_key', 'auth_googleoauth2');
+
+        echo '</label></td><td>';
+
+
+        echo html_writer::empty_tag('input',
+                array('type' => 'text', 'id' => 'openamclientid', 'name' => 'openamclientid',
+                    'class' => 'openamclientid', 'value' => $config->openamclientid));
+
+        if (isset($err["openamclientid"])) {
+            echo $OUTPUT->error_text($err["openamclientid"]);
+        }
+
+        echo '</td><td>';
+        $parse = parse_url($CFG->wwwroot);
+        print_string('auth_openamclientid', 'auth_googleoauth2',
+            array('jsorigins' => $parse['scheme'].'://'.$parse['host'],
+                  'redirecturls' => $CFG->wwwroot . '/auth/googleoauth2/openam_redirect.php')) ;
+
+        echo '</td></tr>';
+        
+        // OpenAM client secret
+
+        echo '<tr>
+                <td align="right"><label for="openamclientsecret">';
+
+        print_string('auth_openamclientsecret_key', 'auth_googleoauth2');
+
+        echo '</label></td><td>';
+
+
+        echo html_writer::empty_tag('input',
+                array('type' => 'text', 'id' => 'openamclientsecret', 'name' => 'openamclientsecret',
+                    'class' => 'openamclientsecret', 'value' => $config->openamclientsecret));
+
+        if (isset($err["openamclientsecret"])) {
+            echo $OUTPUT->error_text($err["openamclientsecret"]);
+        }
+
+        echo '</td><td>';
+
+        print_string('auth_openamclientsecret', 'auth_googleoauth2') ;
+
+        echo '</td></tr>';
+
+        // OpenAM scope
+
+        echo '<tr>
+                <td align="right"><label for="openamscope">';
+
+        print_string('auth_openamscope_key', 'auth_googleoauth2');
+
+        echo '</label></td><td>';
+
+
+        echo html_writer::empty_tag('input',
+                array('type' => 'text', 'id' => 'openamscope', 'name' => 'openamscope',
+                    'class' => 'openamscope', 'value' => $config->openamscope));
+
+        if (isset($err["openamscope"])) {
+            echo $OUTPUT->error_text($err["openamscope"]);
+        }
+
+        echo '</td><td>';
+        $parse = parse_url($CFG->wwwroot);
+        print_string('auth_openamscope', 'auth_googleoauth2');
+
+        echo '</td></tr>';
+        
+        // OpenAM response type
+
+        echo '<tr>
+                <td align="right"><label for="openamresponsetype">';
+
+        print_string('auth_openamresponsetype_key', 'auth_googleoauth2');
+
+        echo '</label></td><td>';
+
+
+        echo html_writer::empty_tag('input',
+                array('type' => 'text', 'id' => 'openamresponsetype', 'name' => 'openamresponsetype',
+                    'class' => 'openamresponsetype', 'value' => $config->openamresponsetype));
+
+        if (isset($err["openamresponsetype"])) {
+            echo $OUTPUT->error_text($err["openamresponsetype"]);
+        }
+
+        echo '</td><td>';
+        $parse = parse_url($CFG->wwwroot);
+        print_string('auth_openamresponsetype', 'auth_googleoauth2');
+
+        echo '</td></tr>';
+        
+        // Google client id
+
+        echo '<tr>
                 <td align="right"><label for="googleclientid">';
 
         print_string('auth_googleclientid_key', 'auth_googleoauth2');
@@ -760,8 +951,7 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
         print_string('auth_linkedinclientsecret', 'auth_googleoauth2') ;
 
         echo '</td></tr>';
-
-
+        
         // IPinfoDB
 
         echo '<tr>
@@ -859,6 +1049,21 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
      */
     function process_config($config) {
         // set to defaults if undefined
+        if (!isset ($config->openamserverurl)) {
+            $config->openamserverurl = '';
+        }
+        if (!isset ($config->openamclientid)) {
+            $config->openamclientid = '';
+        }
+        if (!isset ($config->openamclientsecret)) {
+            $config->openamclientsecret = '';
+        }
+        if (!isset ($config->openamscope)) {
+            $config->openamscope = '';
+        }
+        if (!isset ($config->openamresponsetype)) {
+            $config->openamresponsetype = '';
+        }
         if (!isset ($config->googleclientid)) {
             $config->googleclientid = '';
         }
@@ -900,6 +1105,11 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
         }
 
         // save settings
+        set_config('openamserverurl', $config->openamserverurl, 'auth/googleoauth2');
+        set_config('openamclientid', $config->openamclientid, 'auth/googleoauth2');
+        set_config('openamclientsecret', $config->openamclientsecret, 'auth/googleoauth2');
+        set_config('openamscope', $config->openamscope, 'auth/googleoauth2');
+        set_config('openamresponsetype', $config->openamresponsetype, 'auth/googleoauth2');
         set_config('googleclientid', $config->googleclientid, 'auth/googleoauth2');
         set_config('googleclientsecret', $config->googleclientsecret, 'auth/googleoauth2');
         set_config('facebookclientid', $config->facebookclientid, 'auth/googleoauth2');
