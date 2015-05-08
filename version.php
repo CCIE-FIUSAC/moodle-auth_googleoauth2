@@ -28,5 +28,5 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->version  = 2014060704; // only increment with +1.
 $plugin->requires = 2011070100;   // Requires Moodle 2.1 or later
-$plugin->release = '1.5 (Build: 2014060703) STABLE_25';
+$plugin->release = '1.5 (Build: 2014060704) STABLE_25';
 $plugin->maturity = MATURITY_STABLE;             // this version's maturity level
