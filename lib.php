@@ -31,7 +31,7 @@ function googleoauth2_html_button($authUrl, $providerdisplaystyle, $provider) {
         $a->providername = $provider->readablename;
         return '
         <div class="singinprovider" style="' . $providerdisplaystyle .'">
-            <a class="ssk ssk-text ssk-' . $provider->sskstyle .'" href="'.$authUrl.'"> 
+            <a class="ssk ssk-text ssk-' . $provider->sskstyle .'" href="'.$authUrl.'">
                 '.get_string('auth_sign-in_with','auth_googleoauth2', $a).'
             </a>
         </div>';
@@ -43,7 +43,7 @@ function googleoauth2_html_button($authUrl, $providerdisplaystyle, $provider) {
  * @return array
  */
 function provider_list() {
-    return array('google', 'facebook', 'battlenet', 'github', 'linkedin', 'messenger', 'vk', 'dropbox');
+    return array('google', 'facebook', 'battlenet', 'github', 'linkedin', 'messenger', 'vk', 'dropbox', 'openam');
 }
 
 /**
@@ -119,17 +119,17 @@ function auth_googleoauth2_display_buttons($echo = true) {
 /**
  * The very ugly code to render the html buttons.
  * TODO remove ugly html like center-tag and inline styles, implement a moodle renderer
- * @return string: returns the html for buttons and some JavaScript 
+ * @return string: returns the html for buttons and some JavaScript
  */
 function auth_googleoauth2_render_buttons() {
 	global $CFG;
 	$html ='';
-	
+
     if (!is_enabled_auth('googleoauth2')) {
         return $html;
     }
 
-	
+
 	//get previous auth provider
 	$allauthproviders = optional_param('allauthproviders', false, PARAM_BOOL);
 	$cookiename = 'MOODLEGOOGLEOAUTH2_'.$CFG->sessioncookie;
@@ -167,7 +167,7 @@ function auth_googleoauth2_render_buttons() {
     }
 
     if (!$allauthproviders and !empty($authprovider) and $providerscount>1) {
-		$html .= '<br /><br /> 
+		$html .= '<br /><br />
            <div class="moreproviderlink">
                 <a href="'. $CFG->wwwroot . (!empty($CFG->alternateloginurl) ? $CFG->alternateloginurl : '/login/index.php') . '?allauthproviders=true' .'" onclick="changecss(\'singinprovider\',\'display\',\'inline-block\');">
                     '. get_string('moreproviderlink', 'auth_googleoauth2').'
@@ -176,4 +176,81 @@ function auth_googleoauth2_render_buttons() {
 	}
 
 	return $html;
+}
+
+/**
+* Print a form for configuring OpenAM params
+**/
+function auth_googleoauth2_openam_form($config){
+  echo '<tr>
+      <td align="right"><label for="openamserverurl">';
+
+  print_string('auth_openamserverurl_key', 'auth_googleoauth2');
+
+  echo '</label></td><td>';
+
+
+  echo html_writer::empty_tag('input',
+      array('type' => 'text', 'id' => 'openamserverurl', 'name' => 'openamserverurl',
+          'class' => 'openamserverurl', 'value' => $config->openamserverurl));
+
+  if (isset($err['openamserverurl'])) {
+      echo $OUTPUT->error_text($err['openamserverurl']);
+  }
+
+  echo '</td><td>';
+
+  print_string('auth_openamserverurl', 'auth_googleoauth2') ;
+
+  $parse = parse_url($CFG->wwwroot);
+
+  echo '</td></tr>';
+
+  // client scope
+
+  echo '<tr>
+      <td align="right"><label for="openamscope">';
+
+  print_string('auth_openamscope_key', 'auth_googleoauth2');
+
+  echo '</label></td><td>';
+
+
+  echo html_writer::empty_tag('input',
+      array('type' => 'text', 'id' => 'openamscope', 'name' => 'openamscope',
+          'class' => 'openamscope', 'value' => $config->openamscope));
+
+  if (isset($err['openamscope'])) {
+      echo $OUTPUT->error_text($err['openamscope']);
+  }
+
+  echo '</td><td>';
+
+  print_string('auth_openamscope', 'auth_googleoauth2') ;
+
+  echo '</td></tr>';
+
+  // client response type
+
+  echo '<tr>
+      <td align="right"><label for="openamresponsetype">';
+
+  print_string('auth_openamresponsetype_key', 'auth_googleoauth2');
+
+  echo '</label></td><td>';
+
+
+  echo html_writer::empty_tag('input',
+      array('type' => 'text', 'id' => 'openamresponsetype', 'name' => 'openamresponsetype',
+          'class' => 'openamresponsetype', 'value' => $config->openamresponsetype));
+
+  if (isset($err['openamresponsetype'])) {
+      echo $OUTPUT->error_text($err['openamresponsetype']);
+  }
+
+  echo '</td><td>';
+
+  print_string('auth_openamresponsetype', 'auth_googleoauth2') ;
+
+  echo '</td></tr>';
 }

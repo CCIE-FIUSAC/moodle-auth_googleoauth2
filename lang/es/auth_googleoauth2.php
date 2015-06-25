@@ -30,6 +30,16 @@ $string['auth_facebookclientid'] = 'Tu App ID/Secreto puede ser generado en tu <
 $string['auth_facebookclientid_key'] = 'Facebook App ID';
 $string['auth_facebookclientsecret'] = 'Ver arriba.';
 $string['auth_facebookclientsecret_key'] = 'Facebook App secreto';
+$string['auth_openamserverurl'] = 'URL Servidor. ej: http://ssodes.site.com:8080/OpenAM-12.0.0';
+$string['auth_openamserverurl_key'] = 'URL Servidor OpenAM';
+$string['auth_openamclientid'] = 'Llave de Usuario';
+$string['auth_openamclientid_key'] = 'Llave Usuario OpenAM';
+$string['auth_openamclientsecret'] = 'Ver arriba.';
+$string['auth_openamclientsecret_key'] = 'Secreto App OpenAM';
+$string['auth_openamscope'] = 'Valor Scope. ej: givenname inetuserstatus sn mail cn';
+$string['auth_openamscope_key'] = 'OpenAM Scope';
+$string['auth_openamresponsetype'] = 'Valor Response Type. ej. code';
+$string['auth_openamresponsetype_key'] = 'Response Type';
 $string['auth_githubclientid'] = 'Tu ID cliente/Secreto puede ser generado en tu <a href="https://github.com/settings/applications/new">página de solicitud de registro en Github</a>:
 <br/>Página de inicio URL: {$a->siteurl}
 <br/>Callback URL de autorización: {$a->callbackurl}';

@@ -481,6 +481,9 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
 
         }
 
+        //this function call could
+        auth_googleoauth2_openam_form($config);
+
         if (!isset($config->googleipinfodbkey)) {
             $config->googleipinfodbkey = '';
         }
@@ -608,7 +611,20 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
             set_config($clientsecretname, $config->{$clientsecretname}, 'auth/googleoauth2');
 
         }
-	
+        // Save openam additional settings
+        if (!isset($config->openamserverurl)) {
+            $config->openamserverurl = '';
+        }
+        if (!isset($config->openamscope)) {
+            $config->openamscope = '';
+        }
+        if (!isset($config->openamresponsetype)) {
+            $config->openamresponsetype = '';
+        }
+        set_config('openamserverurl', $config->openamserverurl, 'auth/googleoauth2');
+        set_config('openamscope', $config->openamscope, 'auth/googleoauth2');
+        set_config('openamresponsetype', $config->openamresponsetype, 'auth/googleoauth2');
+
         if (!isset ($config->googleuserprefix)) {
             $config->googleuserprefix = 'social_user_';
         }
