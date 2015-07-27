@@ -1,6 +1,16 @@
 Changelog
 ==========
 
+Release 2.1 (wip)
+-----------------
+* add licence file
+* Remove SocialShareKit [LICENCE ISSUE]
+* Add help text about dropbox and battle.net only working on https site
+* Update admin detail to setup github, windows, linkedin
+* #135 - Translation of the exceptions
+* #131 - Links to providers are unneccessarily output into HTML
+* #129 - Use $PAGE->requires->css to load the css
+
 Release 2.0
 -----------
 * lots of code changes
