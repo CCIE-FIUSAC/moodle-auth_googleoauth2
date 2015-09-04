@@ -26,9 +26,10 @@ Moodle.org is not able to create a package from Github (with vendor libs) yet.
 [![Codacy Badge](https://www.codacy.com/project/badge/84928dc4c553414786735ba745e57c93)](https://www.codacy.com/app/jerome/moodle-auth_googleoauth2)
 [![bountysource](https://api.bountysource.com/badge/team?team_id=49212&style=raised)](https://www.bountysource.com/teams/oauth2-authentication-plugin-for-moodle/backers)
 
+[![Throughput Graph](https://graphs.waffle.io/mouneyrac/moodle-auth_googleoauth2/throughput.svg)](https://waffle.io/mouneyrac/moodle-auth_googleoauth2/metrics)
+
 ### Credits
 * [Contributors](https://github.com/mouneyrac/auth_googleoauth2/graphs/contributors)
-* [Social Share Kit](http://socialsharekit.com/)
 * [The PHP League oauth2 client](https://github.com/thephpleague/oauth2-client)
 * [Pixelfear dropbox support](https://github.com/pixelfear/oauth2-dropbox)
 * [Depotwarehouse battle.net support](https://github.com/tpavlek/oauth2-bnet)
@@ -37,5 +38,5 @@ Moodle.org is not able to create a package from Github (with vendor libs) yet.
 * [Symfony EventDispatcher](http://symfony.com/)
 
 ### +1 the plugin
-To like the plugin, go to the [Moodle.org repositoroty plugin page](https://moodle.org/plugins/view/auth_googleoauth2), login and click on 'Add to my Favorites'. Find other ways to contribute on the [github plugin page](http://mouneyrac.github.io/moodle-auth_googleoauth2/).
+To like the plugin, go to the [Moodle.org repository plugin page](https://moodle.org/plugins/view/auth_googleoauth2), login and click on 'Add to my Favorites'. Find other ways to contribute on the [github plugin page](http://mouneyrac.github.io/moodle-auth_googleoauth2/).
 
