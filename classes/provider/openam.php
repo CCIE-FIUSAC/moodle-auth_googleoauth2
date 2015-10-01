@@ -7,7 +7,7 @@ class provideroauth2openam extends League\OAuth2\Client\Provider\OpenAM {
     // THE VALUES YOU WANT TO CHANGE WHEN CREATING A NEW PROVIDER.
     public $sskstyle = 'openam';
     public $name = 'openam'; // It must be the same as the XXXXX in the class name provideroauth2XXXXX.
-    public $readablename = 'OpenAM';
+    public $readablename = 'Iniciar sesión estudiantes';
 
     /**
      * Constructor.
