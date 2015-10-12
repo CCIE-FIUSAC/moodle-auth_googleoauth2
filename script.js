@@ -12,7 +12,7 @@ $(document).ready(
                     var username = $(formItem).find("input[name='username']").val();
                     var password = $(formItem).find("input[name='password']").val();
                     if(username !== "guest" || password !== "guest") {
-                        $(formItem).append(buttonsCodeOauth2);
+                        $(formItem).prepend(buttonsCodeOauth2);
                     }
                 });
             }
