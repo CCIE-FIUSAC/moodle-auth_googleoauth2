@@ -1,7 +1,7 @@
 #!/bin/bash
 # Modificar variables
 destino=/mnt/memo
-zip=auth_googleoauth2_moodle28_2015090200.zip
+zip=auth_googleoauth2_moodle28_2015111401.zip
 
 cd ..
 cp -r moodle-auth_googleoauth2 $destino

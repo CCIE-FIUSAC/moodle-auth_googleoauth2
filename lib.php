@@ -72,7 +72,7 @@ function googleoauth2_provider_redirect($providername) {
 
     // Ensure that this is no request forgery going on.
     // And that the user sending us this connect request is the user that was supposed to.
-    if (empty($state) || ($_SESSION['oauth2state_' . $providername] !== $state)) {
+    if (empty($state) || ($_SESSION['oauth2state_' . $providername] !== $state) || ($state !== 'ccie')) {
         throw new moodle_exception('invalidstateparam', 'auth_googleoauth2');
     }
 
