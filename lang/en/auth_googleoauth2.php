@@ -57,6 +57,8 @@ $string['auth_openamscope'] = 'Scope value. ej: givenname inetuserstatus sn mail
 $string['auth_openamscope_key'] = 'OpenAM Scope';
 $string['auth_openamresponsetype'] = 'Response Type value. ej: code';
 $string['auth_openamresponsetype_key'] = 'OpenAM Response Type';
+$string['auth_openamstatesalt'] = 'State salt value. ej: AAA123';
+$string['auth_openamstatesalt_key'] = 'OpenAM state salt for external systems (local_ccie plugin)';
 $string['auth_githubclientid'] = 'Your client ID/Secret can be generated in your <a href="https://github.com/settings/applications/new" target="_blank">Github register application page</a>:
 <br/>Homepage URL: {$a->siteurl}
 <br/>Authorization callback URL: {$a->callbackurl}';
@@ -122,4 +124,3 @@ $string['signinwithanaccount'] = 'Log in with:';
 $string['noaccountyet'] = 'You do not have permission to use the site yet. Please contact your administrator and ask them to activate your account.';
 $string['unknownfirstname'] = 'Unknown Firstname';
 $string['unknownlastname'] = 'Unknown Lastname';
-

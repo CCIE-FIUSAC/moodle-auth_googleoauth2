@@ -42,6 +42,7 @@ class OpenAM extends AbstractProvider
         $name = (isset($response->cn)) ? $response->cn : null;
         $email = (isset($response->mail)) ? $response->mail : null;
 
+        // TODO adapt "$response" to user schema
         $user->exchangeArray([
             'uid' => $response->id,
             'nickname' => $response->givenname, // change for other scope param

@@ -8,6 +8,7 @@ class provideroauth2openam extends League\OAuth2\Client\Provider\OpenAM {
     public $sskstyle = 'openam';
     public $name = 'openam'; // It must be the same as the XXXXX in the class name provideroauth2XXXXX.
     public $readablename = 'Iniciar sesión';
+    public $statesalt = '';
 
     /**
      * Constructor.
@@ -26,6 +27,7 @@ class provideroauth2openam extends League\OAuth2\Client\Provider\OpenAM {
             'domain'        => get_config('auth/googleoauth2', $this->name . 'serverurl'),
             'responseType'  => get_config('auth/googleoauth2', $this->name . 'responsetype'),
         ]);
+        $this->statesalt = get_config('auth/googleoauth2', 'openamstatesalt');
     }
 
     /**

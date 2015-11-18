@@ -631,9 +631,13 @@ class auth_plugin_googleoauth2 extends auth_plugin_base {
         if (!isset($config->openamresponsetype)) {
             $config->openamresponsetype = '';
         }
+        if (!isset($config->openamstatesalt)) {
+            $config->openamstatesalt = '';
+        }
         set_config('openamserverurl', $config->openamserverurl, 'auth/googleoauth2');
         set_config('openamscope', $config->openamscope, 'auth/googleoauth2');
         set_config('openamresponsetype', $config->openamresponsetype, 'auth/googleoauth2');
+        set_config('openamstatesalt', $config->openamstatesalt, 'auth/googleoauth2');
 
         if (!isset ($config->googleuserprefix)) {
             $config->googleuserprefix = 'social_user_';

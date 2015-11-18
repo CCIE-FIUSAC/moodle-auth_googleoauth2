@@ -39,6 +39,8 @@ $string['auth_openamscope'] = 'Son los datos solicitados al servidor de OpenAM. 
 $string['auth_openamscope_key'] = 'Scope OpenAM';
 $string['auth_openamresponsetype'] = 'Valor Response Type. ej. json';
 $string['auth_openamresponsetype_key'] = 'Response Type OpenAM';
+$string['auth_openamstatesalt'] = 'Valor para State salt. ej: AAA123';
+$string['auth_openamstatesalt_key'] = 'OpenAM state salt para sistemas externos (extensión local_ccie)';
 $string['auth_githubclientid'] = 'Tu ID cliente/Secreto puede ser generado en tu <a href="https://github.com/settings/applications/new">página de solicitud de registro en Github</a>:
 <br/>Página de inicio URL: {$a->siteurl}
 <br/>Callback URL de autorización: {$a->callbackurl}';

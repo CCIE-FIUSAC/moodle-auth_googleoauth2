@@ -72,7 +72,7 @@ function googleoauth2_provider_redirect($providername) {
 
     // Ensure that this is no request forgery going on.
     // And that the user sending us this connect request is the user that was supposed to.
-    if (empty($state) || ($_SESSION['oauth2state_' . $providername] !== $state) || ($state !== 'ccie')) {
+    if (empty($state) || ($_SESSION['oauth2state_' . $providername] !== $state) && ($state !== md5(strtotime('00:00:00') . get_config('auth/googleoauth2', 'openamstatesalt')) )) {
         throw new moodle_exception('invalidstateparam', 'auth_googleoauth2');
     }
 
@@ -118,7 +118,7 @@ function auth_googleoauth2_display_buttons($echo = true) {
 /**
  * The very ugly code to render the html buttons.
  * TODO remove ugly html like center-tag and inline styles, implement a moodle renderer
- * @return string: returns the html for buttons and some JavaScript 
+ * @return string: returns the html for buttons and some JavaScript
  */
 function auth_googleoauth2_render_buttons() {
     global $CFG;
@@ -248,6 +248,30 @@ function auth_googleoauth2_openam_form($config){
   echo '</td><td>';
 
   print_string('auth_openamresponsetype', 'auth_googleoauth2') ;
+
+  echo '</td></tr>';
+
+  // state salt for external systems (local_ccie plugin)
+
+  echo '<tr>
+      <td align="right"><label for="openamstatesalt">';
+
+  print_string('auth_openamstatesalt_key', 'auth_googleoauth2');
+
+  echo '</label></td><td>';
+
+
+  echo html_writer::empty_tag('input',
+      array('type' => 'text', 'id' => 'openamstatesalt', 'name' => 'openamstatesalt',
+          'class' => 'openamstatesalt', 'value' => $config->openamstatesalt));
+
+  if (isset($err['openamstatesalt'])) {
+      echo $OUTPUT->error_text($err['openamstatesalt']);
+  }
+
+  echo '</td><td>';
+
+  print_string('auth_openamstatesalt', 'auth_googleoauth2') ;
 
   echo '</td></tr>';
 }
